@@ -68,6 +68,9 @@ jobs:
             type=raw,value=latest,enable=true
             type=raw,value=testing,enable=true
 
+      - run: ls -la
+      - run: cat Dockerfile-graalvm
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -119,6 +122,9 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=raw,value=latest,enable=true
+
+      - run: ls -la
+      - run: cat Dockerfile-graalvm
 
       - name: Build and push
         uses: docker/build-push-action@v6
