@@ -13,6 +13,16 @@ on:
       bundle_s3_uri:
         description: The S3 URI (s3://{bucket}/{object_key}) for the GraalVM bundle
         required: true
+      is_latest:
+        description: If the images should be tagged as 'latest'
+        type: boolean
+        required: true
+      is_testing:
+        description: If the images should be tagged as 'testing'
+        type: boolean
+        required: true
+      tag:
+        description: Additional tag for the image, if any
 
 env:
   PUBLIC_REGISTRY: ghcr.io
@@ -57,11 +67,10 @@ jobs:
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
-          #TODO tag toggles
           tags: |
-            type=ref,event=tag
-            type=raw,value=latest,enable=true
-            type=raw,value=testing,enable=true
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=raw,value=latest,enable=${{ inputs.is_latest }}
+            type=raw,value=testing,enable=${{ inputs.is_testing }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -82,7 +91,7 @@ jobs:
       - name: Login to Harbor Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.PRIVATE_REGISTRY }}
+          registry: ${{ env.HARBOR_REGISTRY }}
           username: ${{ secrets.HARBOR_REGISTRY_USERNAME }}
           password: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
 
@@ -90,17 +99,16 @@ jobs:
         id: meta-private
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.PRIVATE_REGISTRY }}/${{ github.repository_owner }}/${{ inputs.project_name }}
+          images: ${{ env.PRIVATE_REGISTRY }}/${{ env.REPOSITORY }}/${{ inputs.project_name }}
           labels: |
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
-          #TODO tag toggles
           tags: |
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=latest,enable=true
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=raw,value=latest,enable=${{ inputs.is_latest }}
+            type=raw,value=testing,enable=${{ inputs.is_testing }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
