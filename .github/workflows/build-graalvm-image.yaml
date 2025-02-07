@@ -11,7 +11,7 @@ on:
         description: The SHA of the git commit
         required: true
       bundle_s3_uri:
-        description: The S3 URI (s3://{bucket}/{object_key}) fo the GraalVM bundle
+        description: The S3 URI (s3://{bucket}/{object_key}) for the GraalVM bundle
         required: true
 
 env:
@@ -21,6 +21,9 @@ env:
 jobs:
   prepare:
     runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,14 +35,6 @@ jobs:
       - name: Create version.txt
         run: echo "${{ inputs.version }}" >> version.txt
 
-  build-and-push-image-ghcr:
-    runs-on: ubuntu-24.04-arm
-    needs: prepare
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
@@ -52,8 +47,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for Docker
-        id: meta
+      - name: Extract metadata for Public Docker
+        id: meta-public
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.PUBLIC_REGISTRY }}/${{ github.repository_owner }}/${{ inputs.project_name }}
@@ -79,26 +74,13 @@ jobs:
           platforms: linux/arm64
           push: true
           pull: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-public.outputs.tags }}
+          labels: ${{ steps.meta-public.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
-  build-and-push-image-harbor-registry:
-    runs-on: ubuntu-24.04-arm
-    needs: build-and-push-image-ghcr
-    permissions:
-      contents: read
-      packages: read
-
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          platforms: linux/arm64
 
       - name: Login to Harbor Container Registry
         uses: docker/login-action@v3
@@ -107,8 +89,8 @@ jobs:
           username: ${{ secrets.HARBOR_REGISTRY_USERNAME }}
           password: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
 
-      - name: Extract metadata for Docker
-        id: meta
+      - name: Extract metadata for Private Docker
+        id: meta-private
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.PRIVATE_REGISTRY }}/${{ github.repository_owner }}/${{ inputs.project_name }}
@@ -134,8 +116,8 @@ jobs:
           platforms: linux/arm64
           push: true
           pull: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-private.outputs.tags }}
+          labels: ${{ steps.meta-private.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
