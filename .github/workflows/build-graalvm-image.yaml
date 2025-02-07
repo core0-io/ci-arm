@@ -1,4 +1,4 @@
-name: build-graalvm-image
+name: build-graalvm-images
 run-name: Build ${{ inputs.project_name }} GraalVM image (${{ inputs.version }})
 
 on:
@@ -8,7 +8,7 @@ on:
         description: Origin project name
         required: true
       version:
-        description: The SHA of the git commit
+        description: The version of the image to be built
         required: true
       bundle_s3_uri:
         description: The S3 URI (s3://{bucket}/{object_key}) for the GraalVM bundle
@@ -19,7 +19,7 @@ env:
   REPOSITORY: core0
 
 jobs:
-  prepare:
+  build-graalvm-images:
     runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
@@ -45,7 +45,7 @@ jobs:
         with:
           registry: ${{ env.PUBLIC_REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_WRITE_PAT }}
 
       - name: Extract metadata for Public Docker
         id: meta-public
@@ -62,9 +62,6 @@ jobs:
             type=ref,event=tag
             type=raw,value=latest,enable=true
             type=raw,value=testing,enable=true
-
-      - run: ls -la
-      - run: cat Dockerfile-graalvm
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -104,9 +101,6 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=raw,value=latest,enable=true
-
-      - run: ls -la
-      - run: cat Dockerfile-graalvm
 
       - name: Build and push
         uses: docker/build-push-action@v6
