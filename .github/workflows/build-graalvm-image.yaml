@@ -31,7 +31,7 @@ jobs:
         run: echo "${{ inputs.version }}" >> version.txt
 
   build-and-push-image-ghcr:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04-arm
     needs: prepare
     permissions:
       contents: read
@@ -78,7 +78,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
   build-and-push-image-harbor-registry:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04-arm
     needs: build-and-push-image-ghcr
     permissions:
       contents: read
