@@ -22,6 +22,8 @@ jobs:
   prepare:
     runs-on: ubuntu-24.04-arm
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Copy GraalVM Bundle from S3
         run: aws s3 cp "${{ inputs.bundle_s3_uri }}" ./bundle.nib
         env:
@@ -69,7 +71,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: ./Dockerfile-graalvm
+          file: Dockerfile-graalvm
           context: .
           platforms: linux/arm64
           push: true
@@ -121,7 +123,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: ./Dockerfile-graalvm
+          file: Dockerfile-graalvm
           context: .
           platforms: linux/arm64
           push: true
