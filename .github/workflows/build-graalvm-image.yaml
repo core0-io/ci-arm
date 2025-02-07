@@ -55,6 +55,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.PUBLIC_REGISTRY }}/${{ github.repository_owner }}/${{ inputs.project_name }}
+          labels: |
+            org.opencontainers.image.revision=${{ inputs.version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
+            org.opencontainers.image.title=${{ inputs.project_name }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           #TODO tag toggles
           tags: |
             type=ref,event=tag
@@ -64,7 +69,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: Dockerfile-graalvm
+          file: ./Dockerfile-graalvm
           context: .
           platforms: linux/arm64
           push: true
@@ -102,6 +107,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.PRIVATE_REGISTRY }}/${{ github.repository_owner }}/${{ inputs.project_name }}
+          labels: |
+            org.opencontainers.image.revision=${{ inputs.version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
+            org.opencontainers.image.title=${{ inputs.project_name }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           #TODO tag toggles
           tags: |
             type=ref,event=tag
@@ -111,7 +121,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: Dockerfile-graalvm
+          file: ./Dockerfile-graalvm
           context: .
           platforms: linux/arm64
           push: true
