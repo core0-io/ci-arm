@@ -6,7 +6,7 @@ on:
       project_name:
         description: Origin project name
         required: true
-      commit_sha:
+      version:
         description: The SHA of the git commit
         required: true
       bundle_s3_uri:
@@ -27,7 +27,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CI_READER_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CI_READER_SECRET_KEY }}
       - name: Create version.txt
-        run: echo "${{ inputs.commit_sha }}" >> version.txt
+        run: echo "${{ inputs.version }}" >> version.txt
 
   build-and-push-image-ghcr:
     runs-on: self-hosted
