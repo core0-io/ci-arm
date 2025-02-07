@@ -1,0 +1,19 @@
+FROM  container-registry.oracle.com/graalvm/native-image:23 AS build
+
+ARG PROJECT_NAME
+
+WORKDIR /
+COPY "./bundle.nib" bundle.nib
+
+RUN native-image -o "./app" --bundle-apply="bundle.nib"
+
+FROM gcr.io/distroless/cc
+
+WORKDIR /
+
+COPY --from=build --chown=root:root /bundle.output/default/app ./app
+COPY resources/example.jks ./resources/example.jks
+COPY version.txt .
+
+USER root
+ENTRYPOINT ["./app"]
