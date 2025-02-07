@@ -12,7 +12,6 @@ FROM gcr.io/distroless/cc
 WORKDIR /
 
 COPY --from=build --chown=root:root /bundle.output/default/app ./app
-COPY resources/example.jks ./resources/example.jks
 COPY version.txt .
 
 USER root
