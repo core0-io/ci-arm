@@ -18,7 +18,9 @@ on:
         type: boolean
         required: true
       tag:
-        description: Git tag to build, if any
+        description: Git tag to apply to image, if any
+      pr:
+        description: Github PR number to build, if any
 
 env:
   PUBLIC_REGISTRY: ghcr.io
@@ -103,6 +105,7 @@ jobs:
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           tags: |
             type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=raw,value=pr-${{ inputs.pr }},enable=${{ inputs.pr != '' }}
             type=raw,value=latest,enable=${{ inputs.is_trunk }}
 
       - name: Build and push
