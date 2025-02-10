@@ -65,6 +65,11 @@ jobs:
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
+          annotations: |
+            org.opencontainers.image.revision=${{ inputs.version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
+            org.opencontainers.image.title=${{ inputs.project_name }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           tags: |
             type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
             type=raw,value=latest,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
@@ -99,6 +104,11 @@ jobs:
         with:
           images: ${{ vars.HARBOR_REGISTRY }}/${{ env.REPOSITORY }}/${{ inputs.project_name }}
           labels: |
+            org.opencontainers.image.revision=${{ inputs.version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
+            org.opencontainers.image.title=${{ inputs.project_name }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
+          annotations: |
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
