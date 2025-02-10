@@ -17,6 +17,9 @@ on:
         description: If the images being pushed are from the git trunk (e.g. master)
         type: boolean
         required: true
+      timestamp:
+        description: The timestamp to associate with the images
+        required: true
       tag:
         description: Git tag to apply to image, if any
       pr:
@@ -61,11 +64,13 @@ jobs:
         with:
           images: ${{ env.PUBLIC_REGISTRY }}/${{ github.repository_owner }}/${{ inputs.project_name }}
           labels: |
+            org.opencontainers.image.created=${{ inputs.timestamp }}
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           annotations: |
+            org.opencontainers.image.created=${{ inputs.timestamp }}
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
@@ -104,11 +109,13 @@ jobs:
         with:
           images: ${{ vars.HARBOR_REGISTRY }}/${{ env.REPOSITORY }}/${{ inputs.project_name }}
           labels: |
+            org.opencontainers.image.created=${{ inputs.timestamp }}
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           annotations: |
+            org.opencontainers.image.created=${{ inputs.timestamp }}
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
             org.opencontainers.image.title=${{ inputs.project_name }}
