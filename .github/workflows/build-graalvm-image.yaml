@@ -95,7 +95,7 @@ jobs:
         id: meta-private
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.PRIVATE_REGISTRY }}/${{ env.REPOSITORY }}/${{ inputs.project_name }}
+          images: ${{ vars.HARBOR_REGISTRY }}/${{ env.REPOSITORY }}/${{ inputs.project_name }}
           labels: |
             org.opencontainers.image.revision=${{ inputs.version }}
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
