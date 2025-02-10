@@ -66,8 +66,8 @@ jobs:
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           tags: |
-            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
-            type=raw,value=latest,enable=${{ inputs.tag != '' }}
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
+            type=raw,value=latest,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
             type=raw,value=testing,enable=${{ inputs.is_trunk }}
 
       - name: Build and push
@@ -104,7 +104,7 @@ jobs:
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           tags: |
-            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
             type=raw,value=pr-${{ inputs.pr }},enable=${{ inputs.pr != '' }}
             type=raw,value=latest,enable=${{ inputs.is_trunk }}
 
