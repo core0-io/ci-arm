@@ -76,9 +76,9 @@ jobs:
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           tags: |
-            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
-            type=raw,value=latest,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
-            type=raw,value=testing,enable=${{ inputs.is_trunk }}
+            type=raw,value=${{ inputs.tag }}-arm64,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
+            type=raw,value=latest-arm64,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
+            type=raw,value=testing-arm64,enable=${{ inputs.is_trunk }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -121,9 +121,9 @@ jobs:
             org.opencontainers.image.title=${{ inputs.project_name }}
             org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/${{ inputs.project_name }}
           tags: |
-            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
-            type=raw,value=pr-${{ inputs.pr }},enable=${{ inputs.pr != '' }}
-            type=raw,value=latest,enable=${{ inputs.is_trunk }}
+            type=raw,value=${{ inputs.tag }}-arm64,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
+            type=raw,value=pr-${{ inputs.pr }}-arm64,enable=${{ inputs.pr != '' }}
+            type=raw,value=latest-arm64,enable=${{ inputs.is_trunk }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
