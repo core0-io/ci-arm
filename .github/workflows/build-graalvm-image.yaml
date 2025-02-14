@@ -73,7 +73,7 @@ jobs:
           tags: |
             type=raw,value=${{ inputs.tag }}-arm64,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
             type=raw,value=latest-arm64,enable=${{ inputs.tag != '' && inputs.tag != 'false' }}
-            type=raw,value=testing-arm64,enable=${{ inputs.is_trunk }}
+            type=raw,value=testing-arm64,enable=${{ inputs.tag == '' && inputs.tag == 'false' && inputs.is_trunk }}
 
       - name: Build and push
         id: public_docker_build

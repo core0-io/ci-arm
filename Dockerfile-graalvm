@@ -5,7 +5,7 @@ ARG PROJECT_NAME
 WORKDIR /
 COPY "./bundle.nib" bundle.nib
 
-RUN native-image -o "./app" --bundle-apply="bundle.nib"
+RUN native-image -o "./app" --bundle-apply="bundle.nib" -Dffwd.architecture="aarch64"
 
 FROM gcr.io/distroless/cc
 
