@@ -1,3 +1,5 @@
+ARG DISTROLESS_TAG="latest"
+
 FROM  container-registry.oracle.com/graalvm/native-image:23 AS build
 
 ARG PROJECT_NAME
@@ -5,14 +7,16 @@ ARG PROJECT_NAME
 WORKDIR /
 COPY "./bundle.nib" bundle.nib
 
-RUN native-image -o "./app" --bundle-apply="bundle.nib" -Dffwd.architecture="aarch64"
+RUN native-image -o "./app" --bundle-apply="bundle.nib"
 
-FROM gcr.io/distroless/cc
+FROM gcr.io/distroless/cc:${DISTROLESS_TAG}
 
 WORKDIR /
 
 COPY --from=build --chown=root:root /bundle.output/default/app ./app
 COPY version.txt .
+
+ENV FFWD_ARCHITECTURE=aarch64
 
 USER root
 ENTRYPOINT ["./app"]

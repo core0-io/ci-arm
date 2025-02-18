@@ -88,6 +88,8 @@ jobs:
           labels: ${{ steps.meta-public.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            DISTROLESS_TAG=latest
 
       - name: Image digest
         run: echo ${{ steps.public_docker_build.outputs.digest }}
@@ -132,6 +134,8 @@ jobs:
           labels: ${{ steps.meta-private.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            DISTROLESS_TAG=debug
 
       - name: Image digest
         run: echo ${{ steps.private_docker_build.outputs.digest }}
