@@ -1,6 +1,6 @@
 ARG DISTROLESS_TAG="latest"
 
-FROM  container-registry.oracle.com/graalvm/native-image:23 AS build
+FROM container-registry.oracle.com/graalvm/native-image:24 AS build
 
 ARG PROJECT_NAME
 
