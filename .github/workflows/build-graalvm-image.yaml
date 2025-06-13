@@ -21,6 +21,8 @@ on:
         description: Git tag to apply to image, if any
       pr:
         description: Github PR number to build, if any
+      production_mode:
+        description: PRODUCTION_MODE environment variable
 
 env:
   PUBLIC_REGISTRY: ghcr.io
@@ -42,6 +44,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CI_READER_SECRET_KEY }}
       - name: Create version.txt
         run: echo "${{ inputs.version }}" >> version.txt
+      - run: echo "PRODUCTION_MODE=${{ inputs.production_mode }}" >> $GITHUB_ENV
+#      - run: curl https://github.com/core0-io/nvtop/releases/download/latest/nvtop-Linux-ARM64 --fail --output nvtop
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
