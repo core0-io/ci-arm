@@ -43,7 +43,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CI_READER_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CI_READER_SECRET_KEY }}
       - run: echo "PRODUCTION_MODE=${{ inputs.production_mode }}" >> $GITHUB_ENV
-      - run: curl https://github.com/core0-io/nvtop/releases/download/latest/nvtop-Linux-ARM64 --fail --output nvtop && chmod 777 nvtop
+      - run: wget https://github.com/core0-io/nvtop/releases/download/latest/nvtop-Linux-ARM64 -O && chmod 777 nvtop
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
