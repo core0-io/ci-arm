@@ -10,14 +10,22 @@ COPY "./bundle.nib" bundle.nib
 RUN native-image -o "./app" --bundle-apply="bundle.nib"
 COPY nvtop .
 
+FROM ubuntu:24.04 AS deps
+
+RUN apt-get update
+RUN apt-get install -y \
+    libncurses5-dev libncursesw5-dev libdrm-dev libsystemd-dev
+
 FROM gcr.io/distroless/cc:${DISTROLESS_TAG}
 
 WORKDIR /
 
+ENV FFWD_ARCHITECTURE=aarch64
+
+COPY --from=deps /lib/${FFWD_ARCHITECTURE}-linux-gnu /lib/${FFWD_ARCHITECTURE}-linux-gnu
+
 COPY --from=build --chown=root:root /bundle.output/default/app ./app
 COPY --from=build /nvtop .
-
-ENV FFWD_ARCHITECTURE=aarch64
 
 USER root
 ENTRYPOINT ["./app"]
