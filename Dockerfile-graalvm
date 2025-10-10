@@ -6,9 +6,11 @@ ARG PROJECT_NAME
 
 WORKDIR /
 COPY "./bundle.nib" bundle.nib
-
-RUN native-image -o "./app" --bundle-apply="bundle.nib"
 COPY nvtop .
+
+RUN native-image -o "./app" \
+    --bundle-apply="bundle.nib" \
+    --enable-native-access=ALL-UNNAMED
 
 FROM ubuntu:24.04 AS deps
 
