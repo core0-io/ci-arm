@@ -7,6 +7,7 @@ ARG PROJECT_NAME
 WORKDIR /
 COPY "./bundle.nib" bundle.nib
 COPY nvtop .
+COPY gnmic .
 
 RUN native-image -o "./app" \
     --bundle-apply="bundle.nib" \
@@ -32,6 +33,7 @@ COPY --from=deps /lib/${FFWD_ARCHITECTURE}-linux-gnu /lib/${FFWD_ARCHITECTURE}-l
 
 COPY --from=build --chown=root:root /bundle.output/default/app ./app
 COPY --from=build /nvtop .
+COPY --from=build /gnmic .
 COPY --from=deps /usr/sbin/haproxy .
 
 USER root
